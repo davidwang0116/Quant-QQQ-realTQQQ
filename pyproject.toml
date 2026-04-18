@@ -1,0 +1,32 @@
+[project]
+name            = "quant-backtest"
+version         = "0.1.0"
+description     = "TQQQ MA200 bull/bear timing strategy backtest"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length    = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "N"]
+ignore = ["E501"]   # line-length handled by formatter
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version         = "3.11"
+warn_return_any        = true
+warn_unused_configs    = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths    = ["tests"]
+addopts      = "-v --tb=short"
+log_cli      = true
+log_cli_level = "INFO"
+
+[tool.coverage.run]
+source = ["strategies", "backtest", "data"]
+omit   = ["tests/*", "*/__init__.py"]

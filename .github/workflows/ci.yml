@@ -1,0 +1,109 @@
+name: CI — Quant Backtest
+
+on:
+  push:
+    branches: ["main", "dev"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "0 2 * * 1"   # run backtest every Monday 02:00 UTC
+
+jobs:
+
+  # ──────────────────────────────────────────
+  #  1. Lint & type-check
+  # ──────────────────────────────────────────
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dev tools
+        run: pip install ruff mypy pandas-stubs
+
+      - name: Ruff lint
+        run: ruff check .
+
+      - name: Ruff format check
+        run: ruff format --check .
+
+      - name: Mypy type check
+        run: mypy strategies/ backtest/ data/ --ignore-missing-imports
+
+  # ──────────────────────────────────────────
+  #  2. Unit tests
+  # ──────────────────────────────────────────
+  test:
+    name: Unit Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests with coverage
+        run: |
+          pytest tests/ -v \
+            --cov=strategies \
+            --cov=backtest \
+            --cov=data \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --tb=short
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          fail_ci_if_error: false
+
+  # ──────────────────────────────────────────
+  #  3. Weekly backtest — saves chart to repo
+  # ──────────────────────────────────────────
+  backtest:
+    name: Weekly Backtest Report
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: [test]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run backtest
+        run: python backtest/run.py --refresh
+
+      - name: Commit backtest report
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git diff --staged --quiet || git commit -m "chore: weekly backtest report [skip ci]"
+          git push
