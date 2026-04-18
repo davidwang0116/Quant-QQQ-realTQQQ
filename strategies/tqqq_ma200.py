@@ -13,7 +13,7 @@ Signal Logic:
   Once all 5 tranches are deployed the entry signal is ignored until
   a SELL clears the position and resets the tranche counter.
 
-Author: Your Name
+Author: David Wang
 """
 
 from __future__ import annotations
