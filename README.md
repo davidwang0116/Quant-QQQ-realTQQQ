@@ -25,8 +25,8 @@ Strategies 2–5 share the same SMA200 signal and DCA parameters.
 
 | Signal / 信号 | Condition / 条件 | Action / 操作 |
 |---|---|---|
-| Bull confirmed / 牛市确认 | `QQQ > SMA200 × 1.04` | DCA entry / 分批买入 |
-| Bear confirmed / 熊市确认 | `QQQ < SMA200 × 0.97` | Full exit / 一次性清仓 |
+| Bull confirmed / 牛市确认 | `QQQ > SMA200 × 1.03` | DCA entry / 分批买入 |
+| Bear confirmed / 熊市确认 | `QQQ < SMA200 × 0.83` | Full exit / 一次性清仓 |
 | Dip trigger / 回调触发 | QQQ daily return ≤ −1% | One tranche / 买入一批 |
 
 Each tranche = `1/max_tranches` of current total equity. Final tranche = all remaining cash.  
@@ -172,7 +172,10 @@ Quant-QQQ-QLD-TQQQ/
 │   ├── tranches_1/         # All-in version / 全仓版结果
 │   │   ├── results.md
 │   │   └── *.png
-│   └── tranches_3/         # 3 Tranches version / 3批版结果
+│   ├── tranches_3/         # 3 Tranches version / 3批版结果
+│   │   ├── results.md
+│   │   └── *.png
+│   └── tranches_5/         # 5 Tranches version / 5批版结果
 │       ├── results.md
 │       └── *.png
 ├── tests/                  # Unit tests / 单元测试

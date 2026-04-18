@@ -477,8 +477,8 @@ def _generate_markdown_report(
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Multi-strategy MA200 backtest")
-    p.add_argument("--buy",      type=float, default=1.04)
-    p.add_argument("--sell",     type=float, default=0.97)
+    p.add_argument("--buy",      type=float, default=1.03)
+    p.add_argument("--sell",     type=float, default=0.83)
     p.add_argument("--ma",       type=int,   default=200)
     p.add_argument("--tranches", type=int,   default=5,
                    help="Entry tranches: 1=all-in, N=1/N equity per tranche")
