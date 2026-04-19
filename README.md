@@ -51,8 +51,8 @@ Synthetic leverage formula / 合成公式:
 
 ## Backtest Results / 回测结果
 
-> Initial capital $100,000 | Buy ×1.04 | Sell ×0.97 | SMA200 | Tranches 5 | Dip −1%  
-> 初始资金 $100,000 | 买入阈值 ×1.04 | 卖出阈值 ×0.97 | SMA200 | 分5批 | 回调幅度 −1%
+> Initial capital $100,000 | Buy ×1.03 | Sell ×0.83 | SMA200 | Tranches 5 | Dip −1%  
+> 初始资金 $100,000 | 买入阈值 ×1.03 | 卖出阈值 ×0.83 | SMA200 | 分5批 | 回调幅度 −1%
 
 ### Full History ~26 Years (2000–2025) / 全历史约26年
 
